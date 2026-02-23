@@ -1,0 +1,28 @@
+get:
+  summary: Busca um Pessoa por ID com filtros
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: O ID numérico de pessoa
+      schema:
+        type: integer
+        format: int64
+    - name: includeDetails
+      in: query
+      required: false
+      description: Define se deve retornar detalhes extras
+      schema:
+        type: boolean
+        default: false
+    - name: X-Request-ID
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+  responses:
+    "200":
+      $ref: '#/components/responses/Sucesso'
+    "404":
+      $ref: '#/components/responses/Erro'

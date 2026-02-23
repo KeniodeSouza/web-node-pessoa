@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  title: WEBSERVICE-NODE-PESSOA
+  description: API para Entidades com Node.js e TypeORM
+  version: 1.0.0
+
+paths:
+  /pessoa:
+    get:
+      summary: Lista todas as pessoas
+      responses:
+        "200":
+          $ref: '#/components/responses/Sucesso'
+        "400":
+          $ref: '#/components/responses/Erro'
+    post:
+      summary: Cria uma nova pessoa
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pessoa'
+      responses:
+        "201":
+          $ref: '#/components/responses/Criado'
+        "400":
+          $ref: '#/components/responses/Erro'
+
+  /pessoa/{id}:
+    get:
+      summary: Busca uma Pessoa por ID com filtros
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: O ID numérico do Pessoa
+          schema:
+            type: integer
+            format: int64
+        - name: includeDetails
+          in: query
+          required: false
+          description: Define se deve retornar detalhes extras
+          schema:
+            type: boolean
+            default: false
+        - name: X-Request-ID
+          in: header
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          $ref: '#/components/responses/Sucesso'
+        "404":
+          $ref: '#/components/responses/Erro'
+
+components:
+  schemas:
+    Pessoa:
+      type: object
+      required:
+        - nomePessoa
+        - indicadorPessoa
+        - cpf
+        - dataNascimento
+      properties:
+        nomePessoa:
+          description: Nome completo da pessoa
+          type: string
+          maxLength: 100
+          example: "João Silva"
+        statusAtivo:
+          description: Indica se o registro está ativo
+          type: boolean
+          default: true
+        indicadorPessoa:
+          description: Tipo de pessoa (Fisica ou Juridica)
+          type: string
+          enum: [F, J] # Substitua pelos valores reais do seu Enum
+          default: F
+        cpf:
+          description: CPF sem pontuação (11 dígitos)
+          type: number
+          minimum: 00000000001
+          maximum: 99999999999
+          example: 79110377018
+        dataNascimento:
+          description: Data de nascimento no formato YYYY-MM-DD
+          type: string
+          format: date
+          example: "1990-05-15"
+        idEndereco:
+          type: integer
+          description: ID do endereço
+          example: 1      
+
+    Endereco:
+      type: object
+      required:
+        - cep
+        - logradouro
+        - cidade
+        - estado
+      properties:
+        cep:
+          description: CEP numérico de 8 dígitos (sem hífen)
+          type: integer
+          minimum: 01000000
+          maximum: 99999999
+          example: 74000100
+        logradouro:
+          description: Nome da rua, avenida ou logradouro
+          type: string
+          maxLength: 100
+          example: "Avenida Central"
+        complemento:
+          description: Informações adicionais (apartamento, bloco, etc)
+          type: string
+          maxLength: 100
+          nullable: true
+          example: "Bloco B, Apto 201"
+        cidade:
+          description: Nome da cidade
+          type: string
+          maxLength: 100
+          example: "Goiânia"
+        estado:
+          description: Sigla da Unidade Federativa (UF)
+          type: string
+          minLength: 2
+          maxLength: 2
+          example: "GO"
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+            description: Código numérico do erro
+            type: integer
+        message:
+            description: Mensagem de erro legível
+            type: string
+        details:
+            description: Lista de detalhes adicionais sobre o erro
+            type: array
+            items:
+              type: string
+
+  responses:
+    Sucesso:
+      description: Operação realizada com sucesso
+    Criado:
+      description: Recurso criado com sucesso
+    Erro:
+      description: Ocorreu um erro inesperado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

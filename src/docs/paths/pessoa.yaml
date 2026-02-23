@@ -1,0 +1,22 @@
+get:
+  summary: Lista todas as pessoas
+  responses:
+    "200":
+      $ref: '#/components/responses/Sucesso'
+    "400":
+      $ref: '#/components/responses/Erro'
+
+post:
+  summary: Cria uma nova pessoa
+  security: 
+    - bearerAuth: []  
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Pessoa'
+  responses:
+    "201":
+      $ref: '#/components/responses/Criado'
+    "400":
+      $ref: '#/components/responses/Erro'

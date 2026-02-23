@@ -1,0 +1,43 @@
+# Dependências
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Variáveis de Ambiente (SENSÍVEL)
+.env
+.env.test
+.env.production
+.env.local
+
+# Build e Saída
+dist
+dist/
+build/
+out/
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Testes e Coverage
+coverage/
+.nyc_output
+
+# Compilação TypeScript
+tsconfig.tsbuildinfo
+
+# Outros
+.npm
+package-lock.json

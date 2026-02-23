@@ -1,0 +1,13 @@
+type: object
+properties:
+  code:
+    type: integer
+    description: Código numérico do erro
+  message:
+    type: string
+    description: Mensagem de erro legível
+  details:
+    type: array
+    items:
+      type: string
+    description: Lista de detalhes adicionais sobre o erro
