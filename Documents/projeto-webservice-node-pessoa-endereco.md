@@ -1,5 +1,7 @@
 # WEBSERVICE-NODE-PESSOA-ENDERECO
 
+O projeto é um webservice para tratamneto de pessoa e endereço. Este e apenas o primeiro passo. O projeto final tratara individualmente as pessoas (Fisica, Juridica e Estrangeira).
+
 **projeto Node.js com npm**. Assim você terá uma API completa em **Express + TypeORM**, 
 com tratamento de erros, respostas padronizadas e logging.
 

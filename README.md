@@ -3,6 +3,9 @@
 Webservice robusto em Node.js para gerenciamento de Pessoas e Endereço. 
 Utilizando Clean Architecture, TypeORM e PostgreSQL.
 
+* O projeto completo da aplicação está localizado em **Documents** deste diretorio.
+
+
 ## 📋 Funcionalidades
 
 - Cadastro e gestão de **Pessoa** e **Endereço**.
