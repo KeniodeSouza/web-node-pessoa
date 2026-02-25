@@ -26,5 +26,5 @@ Utilizando Clean Architecture, TypeORM e PostgreSQL.
 ## 🔧 Instalação e Execução
 
 1. **Clone o repositório:**
-   git clone [https://github.com/SEU_USUARIO/WEBSERVICE-NODE-PESSOA.git](https://github.com//WEBSERVICE-NODE-PESSOA.git)
+   git clone [https://github.com/SEU_USUARIO/WEBSERVICE-NODE-PESSOA.git](https://github.com//WEBSERVICE-NODE-PESSOA-ENDERECO.git)
 
