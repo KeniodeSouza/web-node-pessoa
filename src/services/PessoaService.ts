@@ -3,36 +3,46 @@ import { AppError } from '../errors/AppError';
 import { PessoaRepository } from '../repositories/PessoaRepository';
 
 export class PessoaService {
+  private repository: PessoaRepository;
+
+  constructor() {
+    this.repository = new PessoaRepository();
+  }
+
   async criarPessoa(dados: any) {
-  // Validação centralizada usando o Enum
-    const indicadorPessoa = validarIndicadorPessoa(dados.indicador_pessoa);    
+    validarIndicadorPessoa(dados.indicador_pessoa);
+    
     if (!dados.cpf) throw new AppError('CPF é obrigatório', 422);
-    const pessoa = PessoaRepository.create(dados);
-    return await PessoaRepository.save(pessoa);
+    
+    return await this.repository.create(dados);
   }
 
   async listarTodos() {
-    const pessoas = await PessoaRepository.find({
-      relations: {
-                  endereco: true, // Nome da propriedade definida na Entity Pessoa
-      },
-      order: { nomePessoa: "ASC" },
-    });
-
-    if (!pessoas || pessoas.length === 0) {
+    const lista = await this.repository.findAll();
+    
+    if (!lista || lista.length === 0) {
       throw new AppError('Nenhuma pessoa encontrada', 404);
     }
-
-    if (!pessoas) throw new AppError('Pessoa não encontrada', 404);
-    return pessoas;
+    
+    return lista;
   }
 
-  async obterPessoa(id: number) {
-    const pessoa = await PessoaRepository.findOne({
-      where: { id },
-      relations: ['enderecos'],
-    });
-    if (!pessoa) throw new AppError('Pessoa não encontrada', 404);
-    return pessoa;
+  async obterPorId(id: number) {
+    const retorno = await this.repository.findById(id);
+    if (!retorno) 
+        throw new AppError('Pessoa não encontrada', 404);
+
+    return retorno;
   }
+
+  async obterPorCpf(cpf: any) {
+    const retorno = await this.repository.findByCpf(cpf);
+  
+    if (!retorno) {
+      throw new AppError(`Pessoa com CPF ${cpf} não encontrada`, 404);
+    }
+
+    return retorno;
+  }
+
 }

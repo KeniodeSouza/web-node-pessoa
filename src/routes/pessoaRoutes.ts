@@ -30,7 +30,7 @@ console.log('pessoas', retorno);
  */
 router.get('/:id', asyncHandler(async (req: Request, res: CustomResponse) => {
   const id = (req as any).id;
-  const retorno = await pessoaService.obterPessoa(Number(id));
+  const retorno = await pessoaService.obterPorId(Number(id));
   res.success(retorno, 'Pessoa encontrada');
 }));
 

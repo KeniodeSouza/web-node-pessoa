@@ -1,9 +1,12 @@
 # WEBSERVICE-NODE-PESSOA-ENDERECO 🚀
+---
+
+**Versão: 1.0.0**
 
 Webservice robusto em Node.js para gerenciamento de Pessoas e Endereço. 
 Utilizando Clean Architecture, TypeORM e PostgreSQL.
 
-* O projeto completo da aplicação está localizado em **Documents** deste diretorio.
+> O projeto completo da aplicação está localizado no diretório **/Documents** deste projeto.
 
 
 ## 📋 Funcionalidades
@@ -14,6 +17,7 @@ Utilizando Clean Architecture, TypeORM e PostgreSQL.
 - Tratamento de erros centralizado (sem try/catch redundante).
 - Compatibilidade Cross-Platform (Windows/Linux).
 
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **Node.js** & **TypeScript**
@@ -22,6 +26,36 @@ Utilizando Clean Architecture, TypeORM e PostgreSQL.
 - **PostgreSQL** (Banco de dados)
 - **Joi** (Validação de Schemas)
 - **Swagger** (Documentação)
+
+
+## Arvore de Diretorios
+```text
+WEBSERVICE-NODE-PESSOA/
+├── Documents/
+├── dist/
+├── src/
+│   ├── controllers/        # Recebe requisições e valida com Joi
+│   ├── db/                 # Configurações do Banco de dados
+│   ├── entities/           # Definição da Entidades
+│   ├── enums/              # Definição de Enums e validação
+│   ├── errors/             # Tratamento de erro centralizado
+│   ├── middlewares/        # Tratamento de erro centralizado e validação
+│   ├── services/           # Regras de negócio
+│   ├── repositories/       # TypeORM Entities, Migrations e Repositories
+│   │   └── migrations      # Migração
+│   ├── routes/             # Definição de rotas (Genericas e Específicas)
+│   ├── schemas/            # Schemas Joi (Separados da validação)
+│   ├── swagger/            # Configurações Swagger
+│   ├── server.ts           # Inicialização do servidor
+│   └── app.ts              # Configuração do Aplicativo
+├── .env                    # Variáveis de ambiente
+├── .gitignore              # Modulos ignorados pelo Git 
+├── package.json            # Complentes e dependencias do projeto
+├── README.md               # Descrição do projeto
+└── tsconfig.json           # Definição de desenvolvimento
+```
+---
+
 
 ## 🔧 Instalação e Execução
 

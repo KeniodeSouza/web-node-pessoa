@@ -1,9 +1,11 @@
 # WEBSERVICE-NODE-PESSOA-ENDERECO
 
-O projeto é um webservice para tratamneto de pessoa e endereço. Este e apenas o primeiro passo. O projeto final tratara individualmente as pessoas (Fisica, Juridica e Estrangeira).
+O projeto é um webservice para tratamneto de pessoa e endereço. Este e apenas o primeiro passo. 
 
-**projeto Node.js com npm**. Assim você terá uma API completa em **Express + TypeORM**, 
-com tratamento de erros, respostas padronizadas e logging.
+> O projeto final tratará individualmente as pessoas (Fisica, Juridica e Estrangeira).
+
+**projeto Node.js com npm**. Assim você terá uma API completa em **Express + TypeORM + JOI**, 
+com tratamento de erros, respostas padronizadas e logging. A documentação terá o **swagger-ui** como interface de acesso as API's.
 
 ---
 
@@ -21,7 +23,6 @@ CREATE TABLE teste.endereco (
     CONSTRAINT uq_endereco_cep UNIQUE (cep),
     CONSTRAINT pk_endereco PRIMARY KEY (id)
 );
-
 -- Permissions
 ALTER TABLE teste.endereco OWNER TO user_admin;
 GRANT ALL ON TABLE teste.endereco TO user_admin;
@@ -43,6 +44,7 @@ CREATE TABLE teste.pessoa (
     id_endereco             int4 NOT NULL,
     cpf                     numeric(11) NOT NULL,
     data_nascimento         date NOT NULL,
+	email					varcha(15) NULL,
     CONSTRAINT uq_pessoa_cpf UNIQUE (cpf),
     CONSTRAINT pk_pessoa PRIMARY KEY (id),
     CONSTRAINT fk_pessoa_endereco 
@@ -50,18 +52,16 @@ CREATE TABLE teste.pessoa (
                     REFERENCES teste.endereco(id) 
                         ON DELETE CASCADE
 );
-
 -- Permissions
 ALTER TABLE teste.pessoa OWNER TO user_admin;
 GRANT ALL ON TABLE teste.pessoa TO user_admin;
 
 -- Preenchimento:
 INSERT INTO teste.pessoa
-(nome_pessoa, cpf, data_nascimento, id_endereco) VALUES
-    ('Joao da Silva', '16981545004', '11/10/1960', ?),  
-    ('Maria do Rosario', '45948575071', '05/06/1971', ?),
-    ('Jose das Folhas', '16269944040', '02/01/1985', ?);
-
+(nome_pessoa, cpf, data_nascimento, email, id_endereco) VALUES
+    ('Joao da Silva', '16981545004', 'joao.silva@dominio.com.br', '11/10/1960', ?),  
+    ('Maria do Rosario', '45948575071', 'maria.rosario@dominio.com.br', '05/06/1971', ?),
+    ('Jose das Folhas', '16269944040', 'jose.folha@dominio.com.br', '02/01/1985', ?);
     
 ```
 ---
@@ -76,44 +76,30 @@ npm init -y
 ---
 
 ## Passo 2 – Estrutura de Pastas
-```
+```text
 webservice-node-pessoa-endereco/
-    - src/
-        - controllers/
-            PessoaController.ts
-            EnderecoController.ts
-        - db/
-            data-source.ts
-        - entities/
-            Pessoa.ts
-            Endereco.ts
-        - enums/
-            IndicadorPessoa.ts
-        - errors/
-            AppError.ts
-        - middlewares/
-            errorHandler.ts
-            responseHandler.ts
-            loggerHandler.ts
-        - repositories/
-            PessoaRepository.ts
-            EnderecoRepository.ts
-        - routes/
-            pessoaRoutes.ts
-            enderecoRoutes.ts
-            index.ts   <-- módulo genérico que une todas as rotas
-        - services/
-            PessoaService.ts
-            EnderecoService.ts
-        - utils/
-            asyncHandler.ts
-        - swagger/
-            main.yaml
-  app.ts
-  app.ts
-.env
-tsconfig.json
-package.json
+├── Documents/
+├── dist/
+├── src/
+│    ├── controllers/
+│    ├── db/
+│    ├── entities/
+│    ├── enums/
+│    ├── errors/
+│    ├── middlewares/
+│    ├── repositories/
+│    │   └── migrations/
+│    ├── routes/
+│    ├── services/
+│    ├── utils/
+│    ├── swagger/
+│    ├── app.ts
+│    └── server.ts
+├── .env
+├── .gitignore     
+├── package.json   
+├── README.md      
+└── tsconfig.json
 
 ```
 ---

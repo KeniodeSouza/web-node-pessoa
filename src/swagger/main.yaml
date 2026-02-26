@@ -56,6 +56,22 @@ paths:
         "404":
           $ref: '#/components/responses/Erro'
 
+  /pessoa/cpf/{cpf}:
+    get:
+      summary: Busca por filtro uma Pessoa por CPF
+      parameters:
+        - name: cpf
+          description: CEP numérico de 8 dígitos (sem hífen)
+          type: integer
+          minimum: 01000000
+          maximum: 99999999
+          example: 74000100
+      responses:
+        "200":
+          $ref: '#/components/responses/Sucesso'
+        "404":
+          $ref: '#/components/responses/Erro'
+
 components:
   schemas:
     Pessoa:
@@ -65,6 +81,7 @@ components:
         - indicadorPessoa
         - cpf
         - dataNascimento
+        - cep
       properties:
         nomePessoa:
           description: Nome completo da pessoa
@@ -91,10 +108,12 @@ components:
           type: string
           format: date
           example: "1990-05-15"
-        idEndereco:
+        cep:
+          description: CEP numérico de 8 dígitos (sem hífen)
           type: integer
-          description: ID do endereço
-          example: 1      
+          minimum: 01000000
+          maximum: 99999999
+          example: 74000100
 
     Endereco:
       type: object
