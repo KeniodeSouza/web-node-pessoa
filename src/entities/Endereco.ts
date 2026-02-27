@@ -14,6 +14,9 @@ export class Endereco {
   logradouro: string;
 
   @Column({ type: 'varchar', length: 100 })
+  bairro: string;
+
+  @Column({ type: 'varchar', length: 100 })
   cidade: string;
 
   @Column({ type: 'char', length: 2 })

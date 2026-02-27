@@ -266,6 +266,11 @@ components:
           type: string
           maxLength: 100
           example: "Avenida Central"
+        bairro:
+          description: Nome do bairro na cidade
+          type: string
+          maxLength: 100
+          example: "Setor Central"
         cidade:
           description: Nome de cidade
           type: string
@@ -295,6 +300,11 @@ components:
           type: string
           maxLength: 100
           example: "Avenida Central"
+        bairro:
+          description: Nome do bairro na cidade
+          type: string
+          maxLength: 100
+          example: "Setor Central"
         cidade:
           description: Nome de cidade
           type: string

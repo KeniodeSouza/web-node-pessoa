@@ -16,25 +16,26 @@ export const enderecoCepSchema = Joi.object({
       .invalid('00000000000')   // Impede que o CPF seja apenas zeros
       .required()               
       .messages({
+        'any.required': 'O parâmetro CEP é obrigatório.',
         'string.length': 'O CEP deve ter exatamente 8 dígitos.',
         'string.pattern.base': 'O CEP deve conter apenas números.',
-        'any.invalid': 'CEP inválido (não pode ser apenas zeros).',
-        'any.required': 'O parâmetro CEP é obrigatório.'
+        'any.invalid': 'CEP inválido (não pode ser apenas zeros).'
       })
 });
 
 // Schema para os dados de Criação
 export const enderecoCreateSchema = Joi.object({
   // numeric(8,0) -> 8 dígitos exatos
-    cep: Joi.number()
-        .integer()
-        .min(10000000)
-        .max(99999999)
+    cep: Joi.string()
+        .length(8)               
         .required()
+        .pattern(/^\d+$/)         // Garante que seja estritamente numérico
+        .invalid('00000000000')   // Impede que o CPF seja apenas zeros
         .messages({
             'any.required': 'O CEP é obrigatório',
-            'number.min': 'O CEP deve ter 8 dígitos',
-            'number.max': 'O CEP deve ter 8 dígitos',
+            'string.length': 'O CEP deve ter exatamente 8 dígitos.',
+            'string.pattern.base': 'O CEP deve conter apenas números.',
+            'any.invalid': 'CEP inválido (não pode ser apenas zeros).'
         }),
 
     logradouro: Joi.string()
@@ -45,18 +46,27 @@ export const enderecoCreateSchema = Joi.object({
             'string.max': 'O logradouro deve ter no máximo 100 caracteres',
         }),
 
+     bairro: Joi.string()
+        .max(100)
+        .required()
+        .messages({
+            'any.required': 'O bairro é obrigatório',
+            'string.max': 'O bairro deve ter no máximo 100 caracteres',
+        }),
+
      cidade: Joi.string()
         .max(100)
         .required()
         .messages({
-            'any.required': 'A cidade é obrigatória'
+            'any.required': 'A cidade é obrigatória',
+            'string.max': 'A cidade deve ter no máximo 100 caracteres',
         }),
 
     // char(2) -> Sigla do estado
     estado: Joi.string()
         .length(2)
-        .uppercase()
         .required()
+        .uppercase()
         .messages({
             'any.required': 'O estado é obrigatório',
             'string.length': 'O estado deve ser a sigla com 2 caracteres (ex: SP)',
