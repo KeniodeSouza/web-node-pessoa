@@ -1,20 +1,50 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
+import { BaseController } from './BaseController';
+import { Endereco } from '../entities/Endereco';
+import { Pessoa } from '../entities/Pessoa';
 import { EnderecoService } from '../services/EnderecoService';
 
 const router = Router();
-const enderecoService = new EnderecoService();
+const service = new EnderecoService();
 
-const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
-  Promise.resolve(fn(req, res, next)).catch(next);
+export class EnderecoController extends BaseController<Pessoa> {
+	  private service = new EnderecoService();
 
-router.post('/', asyncHandler(async (req: any, res: any) => {
-  const endereco = await enderecoService.criarEndereco(req.body);
-  res.success(endereco, 'Endereço criado com sucesso');
-}));
+    constructor() {
+        super(Endereco);
+        this.service = new EnderecoService();
+    }
 
-router.get('/pessoa/:pessoaId', asyncHandler(async (req:any, res:any) => {
-  const enderecos = await enderecoService.listarEnderecosPorPessoa(Number(req.params.pessoaId));
-  res.success(enderecos, 'Endereços encontrados');
-}));
+    getForCep = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            // Os dados já chegam validados pelo Middleware do Joi
+            const result = await this.service.buscarPorCep(req.body);
+            return res.status(200).json(result);
+        } catch (error) {
+            next(error); // Erro capturado pelo errorHandler centralizado
+        }
+    }    
 
-export default router;
+    // Sobrescreve ou adiciona o método de criação com lógica de negócio
+    create = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            // Os dados já chegam validados pelo Middleware do Joi
+            const result = await this.service.criar(req.body);
+            return res.status(201).json(result);
+        } catch (error) {
+            next(error); // Erro capturado pelo errorHandler centralizado
+        }
+    };
+ 
+    // Implementação do Update
+    update = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Number(req.params.id);
+            const result = await this.service.atualizar(id, req.body);
+            return res.json(result);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+}

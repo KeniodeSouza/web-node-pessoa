@@ -13,17 +13,14 @@ export class Endereco {
   @Column({ type: 'varchar', length: 100 })
   logradouro: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  complemento: string | null;
-
   @Column({ type: 'varchar', length: 100 })
   cidade: string;
 
   @Column({ type: 'char', length: 2 })
   estado: string;
 
-  // RELAÇÃO BIDIRECIONAL: Um endereço para muitas pessoas
+  // Relacionamento: Um endereço para MUITAS pessoas
   @OneToMany(() => Pessoa, (pessoa) => pessoa.endereco)
-  pessoas: Pessoa[]; 
+  pessoas: Pessoa[];
 
 }

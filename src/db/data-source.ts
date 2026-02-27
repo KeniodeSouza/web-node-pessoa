@@ -14,7 +14,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   entities: [Pessoa, Endereco],
-  synchronize: false,     // True: Não existencia de tabela. False: Tabelas ja criadas
-  logging: true,          // Exibe Query na console
+  logging: false,                         // Exibe Query na console: true ou nao false
+  synchronize: false,                    // True: Não existencia de tabela. False: Tabelas ja criadas
 });
 

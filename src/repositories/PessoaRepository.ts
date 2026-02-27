@@ -1,7 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { AppDataSource } from '../db/data-source';
 import { Pessoa } from '../entities/Pessoa';
-import { IndicadorPessoaEnum } from '../enums/IndicadorPessoaEnum';
 
 export class PessoaRepository {
     private repo: Repository<Pessoa>;
@@ -12,39 +11,41 @@ export class PessoaRepository {
         this.repo = this.dataSource.getRepository(Pessoa);
     }
     
-    async create(dados: any) {
+    async criarNovo(dados: any) {
         // Usamos query parameters ($1, $2...) para evitar SQL Injection
         const sql = `
-            WITH dados (indicador_pessoa, nome_pessoa, cpf, email, data_nascimento, cep) AS (
+            WITH dados (indicador_pessoa, nome_pessoa, cpf, email, data_nascimento, complemento, cep) AS (
                 VALUES (
-                    $1::char(1),        -- indicador_pessoa vindo do Enum
-                    $2::varchar, 
-                    $3::numeric(11),    
-                    $4::varchar, 
-                    $5::date, 
-                    $6::numeric(8) 
+                    $1::char(1),        -- indicador_pessoa 
+                    $2::varchar,        -- Nome completo da pessoa 
+                    $3::numeric(11),    -- CPF da pessoa 
+                    $4::varchar,        -- Email de contato
+                    $5::date,           -- Data de Nascimento da pessoa
+                    $6::varchar,        -- Complemento do endereco
+                    $7::numeric(8)      -- Cep do Endereço da Pessoa
                 )
             )
-            INSERT INTO teste.pessoa (indicador_pessoa, nome_pessoa, cpf, email, data_nascimento, id_endereco)
-                SELECT dd.tipo_pessoa, dd.nome_pessoa, dd.cpf, dd.email, dd.data_nascimento, te.id
+            INSERT INTO teste.pessoa (indicador_pessoa, nome_pessoa, cpf, email, data_nascimento, complemento, id_endereco)
+                SELECT dd.indicador_pessoa, dd.nome_pessoa, dd.cpf, dd.email, dd.data_nascimento, dd.complemento, te.id
                 FROM dados dd
                     INNER JOIN teste.endereco te 
-                        ON te.cpf = dd.cpf
+                        ON te.cep = dd.cep
             RETURNING *;
             `;
 
         const values = [
-                    dados.IndicadorPessoaEnum,  // O valor será 'F' ou 'J'//
-                    dados.nome_pessoa,
+                    dados.indicadorPessoa,      // O valor será 'F' ou 'J'//
+                    dados.nomePessoa,
                     dados.cpf,
                     dados.email,
-                    dados.data_nascimento,
+                    dados.dataNascimento,
+                    dados.complemento,
                     dados.cep
                 ];
 
         // Executa a query bruta e retorna o resultado
         const result = await this.dataSource.query(sql, values);
-        return result[0]; // Retorna a pessoa inserida (devido ao RETURNING *)    }
+        return result[0];   // Retorna os dados do registro inserido (devido ao RETURNING *)    }
     }
 
     async findAll() {

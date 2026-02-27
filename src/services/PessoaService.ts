@@ -9,12 +9,12 @@ export class PessoaService {
     this.repository = new PessoaRepository();
   }
 
-  async criarPessoa(dados: any) {
-    validarIndicadorPessoa(dados.indicador_pessoa);
-    
-    if (!dados.cpf) throw new AppError('CPF é obrigatório', 422);
-    
-    return await this.repository.create(dados);
+  async criarNovo(dados: any) {
+    const retorno = await this.repository.criarNovo(dados);
+    if (!retorno) 
+        throw new AppError('Pessoa não criado', 404);
+
+    return retorno;
   }
 
   async listarTodos() {

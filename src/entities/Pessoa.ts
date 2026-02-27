@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { IndicadorPessoaEnum } from '../enums/IndicadorPessoaEnum';
 import { Endereco } from './Endereco';
 
@@ -27,9 +27,15 @@ export class Pessoa {
   @Column({ name: 'data_nascimento', type: 'date' })
   dataNascimento: Date;
 
-  // CONSTRAINT fk_pessoa_endereco 
-  @OneToOne(() => Endereco, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id_endereco' })
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  email: string | null;
+
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  complemento: string | null;
+
+  // RELACIONAMENTO: Muitas pessoas para UM endereço
+  @ManyToOne(() => Endereco, (endereco) => endereco.pessoas)
+  @JoinColumn({ name: 'id_endereco' }) // A FK fica aqui na tabela Pessoa
   endereco: Endereco;
-  
+
 }

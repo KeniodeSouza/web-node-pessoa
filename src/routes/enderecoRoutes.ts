@@ -1,31 +1,27 @@
 import { Router } from 'express';
-import { Endereco } from '../entities/Endereco';
-import { CustomResponse } from '../middlewares/responseHandler';
-import { EnderecoService } from '../services/EnderecoService';
-import { asyncHandler } from '../utils/asyncHandler';
+import { EnderecoController } from '../controllers/EnderecoController';
+import { validateRequest } from '../middlewares/validateRequest';
+import { enderecoIdSchema, enderecoCepSchema, enderecoCreateSchema, enderecoUpdateSchema } from '../schemas/endereco.schema';
 
 const router = Router();
-const enderecoService = new EnderecoService();
+const controller = new EnderecoController();
 
-router.post('/', asyncHandler(async (
-                                    req: Request, res: CustomResponse) => {
-  const dados = req.body as Partial<Endereco>;
-  const retorno = await enderecoService.criarEndereco(dados);
-  res.success(retorno, 'Endereço criado com sucesso');
-}));
+// Rotas específicas da entidade
+router.get('/', controller.getAll);
+router.get('/:id', 
+                validateRequest(enderecoIdSchema, 'params'), controller.getOne);
+router.get('/cep/:cep', 
+                validateRequest(enderecoCepSchema, 'params'), controller.getForCep);
 
-router.get('/', asyncHandler(async (
-                                    req: Request, res: CustomResponse) => {
-  const retorno = await enderecoService.listarTodos();
-  res.success(retorno, 'Endereços encontrados');
-}));
+// Atualização da base de dados 
+router.post('/', 
+                validateRequest(enderecoCreateSchema, 'body'), controller.create);
 
-
-router.get('/:id/pessoas', asyncHandler(async (
-                                              req: Request, res: CustomResponse) => {
-  const id = (req as any).id;
-  const retorno = await enderecoService.listarEnderecosPorPessoa(Number(id));
-  res.success(retorno, 'Endereços encontrados');
-}));
+router.put('/:id', 
+                validateRequest(enderecoIdSchema, 'params'),
+                validateRequest(enderecoUpdateSchema, 'body'), 
+                controller.update);
+// router.delete('/:id', controller.delete);
 
 export default router;
+

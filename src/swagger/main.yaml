@@ -19,7 +19,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pessoa'
+              $ref: '#/components/schemas/PessoaNova'
       responses:
         "201":
           $ref: '#/components/responses/Criado'
@@ -28,28 +28,15 @@ paths:
 
   /pessoa/{id}:
     get:
-      summary: Busca uma Pessoa por ID com filtros
+      summary: Busca por filtro, uma Pessoa por ID
       parameters:
         - name: id
+          description: O ID numérico do Pessoa
           in: path
           required: true
-          description: O ID numérico do Pessoa
           schema:
             type: integer
             format: int64
-        - name: includeDetails
-          in: query
-          required: false
-          description: Define se deve retornar detalhes extras
-          schema:
-            type: boolean
-            default: false
-        - name: X-Request-ID
-          in: header
-          required: false
-          schema:
-            type: string
-            format: uuid
       responses:
         "200":
           $ref: '#/components/responses/Sucesso'
@@ -58,23 +45,70 @@ paths:
 
   /pessoa/cpf/{cpf}:
     get:
-      summary: Busca por filtro uma Pessoa por CPF
+      summary: Busca por filtro, uma Pessoa por CPF
       parameters:
         - name: cpf
-          description: CEP numérico de 8 dígitos (sem hífen)
-          type: integer
-          minimum: 01000000
-          maximum: 99999999
-          example: 74000100
+          description: CPF sem pontuação (11 dígitos)
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]{11}$'
+            minLength: 11
+            maxLength: 11
+          example: "79110377022"
       responses:
         "200":
           $ref: '#/components/responses/Sucesso'
         "404":
           $ref: '#/components/responses/Erro'
 
+  /endereco:
+    get:
+      summary: Lista todas os Endereços
+      responses:
+        "200":
+          $ref: '#/components/responses/Sucesso'
+        "400":
+          $ref: '#/components/responses/Erro'
+    post:
+      summary: Cria uma novo Endereco
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnderecoNovo'
+      responses:
+        "201":
+          $ref: '#/components/responses/Criado'
+        "400":
+          $ref: '#/components/responses/Erro'
+
+  /endereco/{id}:
+    put:
+      summary: Atualiza o Endereco
+      parameters:
+        - name: id
+          description: O ID numérico do Endereco
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnderecoAtual'
+      responses:
+        "201":
+          $ref: '#/components/responses/Atualizado'
+        "400":
+          $ref: '#/components/responses/Erro'
+
 components:
   schemas:
-    Pessoa:
+    PessoaNova:
       type: object
       required:
         - nomePessoa
@@ -87,7 +121,7 @@ components:
           description: Nome completo da pessoa
           type: string
           maxLength: 100
-          example: "João Silva"
+          example: "Fulano de Tal"
         statusAtivo:
           description: Indica se o registro está ativo
           type: boolean
@@ -99,23 +133,84 @@ components:
           default: F
         cpf:
           description: CPF sem pontuação (11 dígitos)
-          type: number
-          minimum: 00000000001
-          maximum: 99999999999
-          example: 79110377018
+          type: string
+          pattern: '^[0-9]{11}$'
+          minLength: 11
+          maxLength: 11          
+          example: "79110377022"
         dataNascimento:
           description: Data de nascimento no formato YYYY-MM-DD
           type: string
           format: date
           example: "1990-05-15"
+        email:
+          description: Email para contacto
+          type: string
+          example: "FulanoTal@dominio.com.br"
+        complemento:
+          description: Informações adicionais (quadra, lote, edificio, apartamento, bloco, etc.)
+          type: string
+          maxLength: 100
+          nullable: true
+          example: "Bloco B, Apto 201"
         cep:
-          description: CEP numérico de 8 dígitos (sem hífen)
-          type: integer
-          minimum: 01000000
-          maximum: 99999999
-          example: 74000100
+          description: Código de Endereçamento Postal - Numérico de 8 dígitos (sem pontuação)
+          type: string
+          pattern: '^[0-9]{8}$'
+          minLength: 8
+          maxLength: 8          
+          example: 74000001
 
-    Endereco:
+    PessoaAtual:
+      type: object
+      required:
+        - cpf
+      properties:
+        nomePessoa:
+          description: Nome completo da pessoa
+          type: string
+          maxLength: 100
+          example: "Fulano de Tal"
+        statusAtivo:
+          description: Indica se o registro está ativo
+          type: boolean
+          default: true
+        indicadorPessoa:
+          description: Tipo de pessoa (Fisica ou Juridica)
+          type: string
+          enum: [F, J] # Substitua pelos valores reais do seu Enum
+          default: F
+        cpf:
+          description: CPF sem pontuação (11 dígitos)
+          type: string
+          pattern: '^[0-9]{11}$'
+          minLength: 11
+          maxLength: 11          
+          example: "79110377022"
+        dataNascimento:
+          description: Data de nascimento no formato YYYY-MM-DD
+          type: string
+          format: date
+          example: "1990-05-15"
+        email:
+          description: Email para contacto
+          type: string
+          example: "FulanoTal@dominio.com.br"
+        complemento:
+          description: Informações adicionais (quadra, lote, edificio, apartamento, bloco, etc.)
+          type: string
+          maxLength: 100
+          nullable: true
+          example: "Bloco B, Apto 201"
+        cep:
+          description: Código de Endereçamento Postal - Numérico de 8 dígitos (sem pontuação)
+          type: string
+          pattern: '^[0-9]{8}$'
+          minLength: 8
+          maxLength: 8          
+          example: 74000001
+
+    EnderecoNovo:
       type: object
       required:
         - cep
@@ -124,24 +219,48 @@ components:
         - estado
       properties:
         cep:
-          description: CEP numérico de 8 dígitos (sem hífen)
-          type: integer
-          minimum: 01000000
-          maximum: 99999999
-          example: 74000100
+          description: Código de Endereçamento Postal - Numérico de 8 dígitos (sem pontuação)
+          type: string
+          pattern: '^[0-9]{8}$'
+          minLength: 8
+          maxLength: 8          
+          example: 74000001
         logradouro:
-          description: Nome da rua, avenida ou logradouro
+          description: Nome de ruas, avenidas, praças, etc.
           type: string
           maxLength: 100
           example: "Avenida Central"
-        complemento:
-          description: Informações adicionais (apartamento, bloco, etc)
+        cidade:
+          description: Nome de cidade
           type: string
           maxLength: 100
-          nullable: true
-          example: "Bloco B, Apto 201"
+          example: "Goiânia"
+        estado:
+          description: Sigla da Unidade Federativa (UF)
+          type: string
+          minLength: 2
+          maxLength: 2
+          example: "GO"
+
+    EnderecoAtual:
+      type: object
+      required:
+        - cep
+      properties:
+        cep:
+          description: Código de Endereçamento Postal - Numérico de 8 dígitos (sem pontuação)
+          type: string
+          pattern: '^[0-9]{8}$'
+          minLength: 8
+          maxLength: 8          
+          example: 74000001
+        logradouro:
+          description: Nome de ruas, avenidas, praças, etc.
+          type: string
+          maxLength: 100
+          example: "Avenida Central"
         cidade:
-          description: Nome da cidade
+          description: Nome de cidade
           type: string
           maxLength: 100
           example: "Goiânia"
@@ -172,6 +291,8 @@ components:
       description: Operação realizada com sucesso
     Criado:
       description: Recurso criado com sucesso
+    Atualizado:
+      description: Recurso atualizado com sucesso
     Erro:
       description: Ocorreu um erro inesperado
       content:

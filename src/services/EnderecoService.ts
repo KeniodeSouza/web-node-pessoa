@@ -1,35 +1,58 @@
-import { EnderecoRepository } from '../repositories/EnderecoRepository';
 import { Endereco } from '../entities/Endereco';
-import { PessoaRepository } from '../repositories/PessoaRepository';
 import { AppError } from '../errors/AppError';
+import { EnderecoRepository } from '../repositories/EnderecoRepository';
 
 export class EnderecoService {
-  async criarEndereco(dados: Partial<Endereco>) {
-    const endereco = EnderecoRepository.create(dados);
-    return await EnderecoRepository.save(endereco);
+  private repository: EnderecoRepository;
+
+  constructor() {
+    this.repository = new EnderecoRepository();
   }
 
   async listarTodos() {
-    const resultado = await EnderecoRepository.find();
-    if (!resultado) {
+    const lista = await this.repository.findAll();
+    if (!lista) {
       throw new AppError('Endereço não encontrado', 404);
     }
 
-    return resultado;
+    return lista;
   }
 
-  async listarEnderecosPorPessoa(id: number) {
+  async buscarPorId(id: number) {
+    const retorno = await this.repository.findById(id);
+    if (!retorno) 
+        throw new AppError('Endereço não encontrado', 404);
 
-    const resultado = await EnderecoRepository.findOne({
-        where: { id },
-        relations: { pessoas: true, },
-    });
+    return retorno;
+  }
 
-    if (!resultado) {
-      throw new AppError('Endereço não encontrado', 404);
+  async buscarPorCep(cep: any) {
+    const retorno = await this.repository.findByCep(cep);
+    if (!retorno) {
+      throw new AppError(`Endereço com CEP ${cep} não encontrado`, 404);
     }
 
-    return resultado;
+    return retorno;
   }
+
+    async criar(dados: Partial<Endereco>) {
+        // 1. Validar se o CNPJ já existe (Regra de Negócio)
+        const jaExiste = await this.repository.findByCep(dados.cep);
+        if( jaExiste ) {
+            throw { status: 409, message: "Este CEP já está cadastrado no sistema." };
+        }
+
+        return await this.repository.insert(dados);
+    }
+    
+    async atualizar(id: number, dados: Partial<Endereco>) {
+        const jaExiste = await this.repository.findById(id);
+        if (!jaExiste) {
+            throw { status: 404, message: "Endereço não encontrado para atualização." };
+        }
+
+        // Merge de dados para atualização parcial
+        return await this.repository.update(id, dados);
+    }
     
 }

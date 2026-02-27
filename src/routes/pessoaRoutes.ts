@@ -1,38 +1,20 @@
 import { Router } from 'express';
-import { PessoaService } from '../services/PessoaService';
-import { asyncHandler } from '../utils/asyncHandler';
-import { CustomResponse } from '../middlewares/responseHandler';
-import { Pessoa } from '../entities/Pessoa';
+import { PessoaController } from '../controllers/PessoaController';
+import { validateRequest } from '../middlewares/validateRequest';
+import { pessoaIdSchema, pessoaCpfSchema, pessoaCreateSchema } from '../schemas/pessoa.schema';
 
 const router = Router();
-const pessoaService = new PessoaService();
+const controller = new PessoaController();
 
-/**
- * Cria um novo registro de Pessoa
- */
-router.post('/', asyncHandler(async (req: Request, res: CustomResponse) => {
-  const dados = req.body as Partial<Pessoa>;
-  const retorno = await pessoaService.criarPessoa(dados);
-  res.success(retorno, 'Pessoa criada com sucesso');
-}));
-
-/**
- * Lista todos os registros de Pessoa
- */
-router.get('/', asyncHandler(async (req: Request, res: CustomResponse) => {
-  const retorno = await pessoaService.listarTodos();
-console.log('pessoas', retorno);  
-  res.success(retorno, 'Pessoas encontrada');
-}));
-
-/**
- * Busca o registro id de Pessoa
- */
-router.get('/:id', asyncHandler(async (req: Request, res: CustomResponse) => {
-  const id = (req as any).id;
-  const retorno = await pessoaService.obterPorId(Number(id));
-  res.success(retorno, 'Pessoa encontrada');
-}));
+// Rotas específicas da entidade
+router.get('/', controller.getAll);
+router.get('/:id', 
+                validateRequest(pessoaIdSchema, 'params'), controller.getOne);
+router.get('/cpf/:cpf',  
+                validateRequest(pessoaCpfSchema, 'params'), controller.getForCpf);
+                
+// Atualização da base de dados
+// router.post('/', validateRequest(pessoaCreateSchema, 'body')), controller.createNew);
+router.post('/', controller.createNew);
 
 export default router;
-
