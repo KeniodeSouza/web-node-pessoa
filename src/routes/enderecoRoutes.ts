@@ -7,15 +7,19 @@ const router = Router();
 const controller = new EnderecoController();
 
 // Rotas específicas da entidade
-router.get('/', controller.getAll);
+router.get('/', 
+                controller.getAll);
 router.get('/:id', 
-                validateRequest(enderecoIdSchema, 'params'), controller.getOne);
-router.get('/cep/:cep', 
-                validateRequest(enderecoCepSchema, 'params'), controller.getForCep);
+                validateRequest(enderecoIdSchema, 'params'), 
+                controller.getForId);
+router.get('/cep/:cep',
+                validateRequest(enderecoCepSchema, 'params'), 
+                controller.getForCep);
 
 // Atualização da base de dados 
 router.post('/', 
-                validateRequest(enderecoCreateSchema, 'body'), controller.create);
+                validateRequest(enderecoCreateSchema, 'body'), 
+                controller.create);
 
 router.put('/:id', 
                 validateRequest(enderecoIdSchema, 'params'),

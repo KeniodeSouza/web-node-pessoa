@@ -1,4 +1,3 @@
-import { validarIndicadorPessoa } from '../enums/IndicadorPessoaEnum';
 import { AppError } from '../errors/AppError';
 import { PessoaRepository } from '../repositories/PessoaRepository';
 
@@ -9,15 +8,15 @@ export class PessoaService {
     this.repository = new PessoaRepository();
   }
 
-  async criarNovo(dados: any) {
-    const retorno = await this.repository.criarNovo(dados);
+  async createNew(dados: any) {
+    const retorno = await this.repository.createNew(dados);
     if (!retorno) 
         throw new AppError('Pessoa não criado', 404);
 
     return retorno;
   }
 
-  async listarTodos() {
+  async findAll() {
     const lista = await this.repository.findAll();
     
     if (!lista || lista.length === 0) {
@@ -27,7 +26,7 @@ export class PessoaService {
     return lista;
   }
 
-  async obterPorId(id: number) {
+  async findById(id: any) {
     const retorno = await this.repository.findById(id);
     if (!retorno) 
         throw new AppError('Pessoa não encontrada', 404);
@@ -35,7 +34,7 @@ export class PessoaService {
     return retorno;
   }
 
-  async obterPorCpf(cpf: any) {
+  async findByCpf(cpf: any) {
     const retorno = await this.repository.findByCpf(cpf);
   
     if (!retorno) {

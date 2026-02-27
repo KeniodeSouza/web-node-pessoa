@@ -5,7 +5,10 @@ import { Schema } from 'joi';
 export const validateRequest = (schema: Schema, property: 'body' | 'params' | 'query' = 'body') => {
     return (req: Request, res: Response, next: NextFunction) => {
         // Acessamos dinamicamente req[property]
-        const { error } = schema.validate(req[property], { abortEarly: false });
+        const { error } = schema.validate(req[property], { 
+                                abortEarly: false,
+                                allowUnknown: false // Se true, ignora campos extras (cuidado!)
+                            });
         
         if (error) {
             const mensagens = error.details.map(d => d.message).join(', ');

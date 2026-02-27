@@ -3,7 +3,6 @@ import { IndicadorPessoaEnum } from '../enums/IndicadorPessoaEnum';
 
 // Schema para o Parametro ID
 export const pessoaIdSchema = Joi.object({
-  params: Joi.object({
     id: Joi.number()
       .integer()
       .positive()
@@ -14,12 +13,10 @@ export const pessoaIdSchema = Joi.object({
         'number.positive': 'O ID deve ser um número maior que zero.',
         'any.required': 'O parâmetro ID é obrigatório.'      
       })
-  })    
 });
 
 // Schema para o Parametro CPF
 export const pessoaCpfSchema = Joi.object({
-  params: Joi.object({
     cpf: Joi.string()
       .length(11)               // Tamanho fixo de 11 dígitos
       .pattern(/^\d+$/)         // Garante que seja estritamente numérico
@@ -31,7 +28,6 @@ export const pessoaCpfSchema = Joi.object({
         'any.invalid': 'CPF inválido (não pode ser apenas zeros).',
         'any.required': 'O parâmetro CPF é obrigatório.'
       })
-  })
 });
 
 // Schema para Criação

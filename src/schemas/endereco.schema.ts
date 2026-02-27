@@ -10,7 +10,6 @@ export const enderecoIdSchema = Joi.object({
 
 // Schema do Parametro CEP
 export const enderecoCepSchema = Joi.object({
-  params: Joi.object({
     cep: Joi.string()
       .length(8)               
       .pattern(/^\d+$/)         // Garante que seja estritamente numérico
@@ -22,7 +21,6 @@ export const enderecoCepSchema = Joi.object({
         'any.invalid': 'CEP inválido (não pode ser apenas zeros).',
         'any.required': 'O parâmetro CEP é obrigatório.'
       })
-  })
 });
 
 // Schema para os dados de Criação

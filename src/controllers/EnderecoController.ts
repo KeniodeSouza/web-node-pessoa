@@ -15,10 +15,34 @@ export class EnderecoController extends BaseController<Pessoa> {
         this.service = new EnderecoService();
     }
 
-    getForCep = async (req: Request, res: Response, next: NextFunction) => {
+    getAll = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const result = await this.service.findAll();
+            return res.status(200).json(result);
+        } catch (error) {
+            next(error); // Erro capturado pelo errorHandler centralizado
+        }
+    }
+
+    getForId = async (req: Request, res: Response, next: NextFunction) => {
+        const { id } = req.params;
+        const idNum = Number(id);
+    
         try {
             // Os dados já chegam validados pelo Middleware do Joi
-            const result = await this.service.buscarPorCep(req.body);
+            const result = await this.service.findById(idNum);
+            return res.status(200).json(result);
+        } catch (error) {
+            next(error); // Erro capturado pelo errorHandler centralizado
+        }
+    }
+
+    getForCep = async (req: Request, res: Response, next: NextFunction) => {
+        const { cep } = req.params;
+    
+        try {
+            // Os dados já chegam validados pelo Middleware do Joi
+            const result = await this.service.findByCep(cep);
             return res.status(200).json(result);
         } catch (error) {
             next(error); // Erro capturado pelo errorHandler centralizado

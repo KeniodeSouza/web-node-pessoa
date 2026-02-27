@@ -11,7 +11,7 @@ export class PessoaRepository {
         this.repo = this.dataSource.getRepository(Pessoa);
     }
     
-    async criarNovo(dados: any) {
+    async createNew(dados: any) {
         // Usamos query parameters ($1, $2...) para evitar SQL Injection
         const sql = `
             WITH dados (indicador_pessoa, nome_pessoa, cpf, email, data_nascimento, complemento, cep) AS (
@@ -50,15 +50,15 @@ export class PessoaRepository {
 
     async findAll() {
         return await this.repo.find({
-            relations: { endereco: true },
-            order: { nomePessoa: "ASC" },
+            relations: ['endereco'],
+            order: { nomePessoa: "ASC" }
         });
     }
 
-    async findById(id: number) {
+    async findById(id: any) {
         return await this.repo.findOne({
             where: { id },
-            relations: ['endereco'], // Ajustado para singular conforme seu find anterior
+            relations: ['endereco']  // Ajustado para singular conforme seu find anterior
         });
     }
  
