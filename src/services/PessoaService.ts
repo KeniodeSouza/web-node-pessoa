@@ -20,7 +20,7 @@ export class PessoaService {
     const lista = await this.repository.findAll();
     
     if (!lista || lista.length === 0) {
-      throw new AppError('Nenhuma pessoa encontrada', 404);
+      throw new AppError('Nenhuma pessoa foi encontrada', 404);
     }
     
     return lista;
@@ -29,7 +29,7 @@ export class PessoaService {
   async findById(id: any) {
     const retorno = await this.repository.findById(id);
     if (!retorno) 
-        throw new AppError('Pessoa não encontrada', 404);
+        throw new AppError(`Pessoa com ID ${id} não foi encontrada`, 404);
 
     return retorno;
   }
@@ -38,7 +38,7 @@ export class PessoaService {
     const retorno = await this.repository.findByCpf(cpf);
   
     if (!retorno) {
-      throw new AppError(`Pessoa com CPF ${cpf} não encontrada`, 404);
+      throw new AppError(`Pessoa com CPF ${cpf} não foi encontrada`, 404);
     }
 
     return retorno;

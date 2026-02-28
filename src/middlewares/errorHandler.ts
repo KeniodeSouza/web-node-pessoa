@@ -1,20 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
+import { AppError } from '../errors/AppError';
 
-export function errorHandler(
-  err: any, 
-  req: Request, 
-  res: Response, 
-  next: NextFunction
-) {
-  // Define o status: usa o statusCode do AppError ou 500 (Erro Interno)
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Erro interno do servidor';
+/**
+ * Funcao: Captura dos erros no aplicação
+ */
+export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+  // Erros manipulados:
+  if (err instanceof AppError) {
+    return res.status(err.statusCode).json({
+      status: 'error',
+      message: err.message,
+      data: undefined
+    });
+  }
 
-  // Resposta padronizada igual ao seu successHandler
-  res.status(statusCode).json({
+  // Erros de sistema incontrolados
+  console.error(err);
+  return res.status(500).json({
     status: 'error',
-    message,
+    message: 'Erro interno do servidor',
+    data: undefined,
     // Em desenvolvimento, você pode incluir o stack trace para facilitar o debug
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    stack: process.env.APP_ENV === 'development' ? err.stack : undefined,
   });
 }

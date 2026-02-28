@@ -12,16 +12,16 @@ export class EnderecoService {
   async findAll() {
     const lista = await this.repository.findAll();
     if (!lista) {
-      throw new AppError('Endereço não encontrado', 404);
+      throw new AppError('Endereço não foi encontrado', 404);
     }
 
     return lista;
   }
 
-  async findById(id: number) {
+  async findById(id: any) {
     const retorno = await this.repository.findById(id);
     if (!retorno) 
-        throw new AppError('Endereço não encontrado', 404);
+        throw new AppError(`Endereço com Id ${id} não foi encontrado`, 404);
 
     return retorno;
   }
@@ -29,7 +29,7 @@ export class EnderecoService {
   async findByCep(cep: any) {
     const retorno = await this.repository.findByCep(cep);
     if (!retorno) {
-      throw new AppError(`Endereço com CEP ${cep} não encontrado`, 404);
+      throw new AppError(`Endereço com CEP ${cep} não foi encontrado`, 404);
     }
 
     return retorno;
@@ -45,7 +45,7 @@ export class EnderecoService {
         return await this.repository.insert(dados);
     }
     
-    async atualizar(id: number, dados: Partial<Endereco>) {
+    async atualizar(id: any, dados: Partial<Endereco>) {
         const jaExiste = await this.repository.findById(id);
         if (!jaExiste) {
             throw { status: 404, message: "Endereço não encontrado para atualização." };

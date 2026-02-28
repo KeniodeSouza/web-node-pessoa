@@ -17,7 +17,7 @@ export class EnderecoRepository {
         });
     }
 
-    async findById(id: number) {
+    async findById(id: any) {
         return await this.repo.findOne({
             where: { id }
         });

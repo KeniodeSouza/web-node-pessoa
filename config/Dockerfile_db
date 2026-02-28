@@ -1,0 +1,15 @@
+## Dockerfile - Servidor de BD - Postgres
+
+# Utilizando a imagem oficial do PostgreSQL (versão estável)
+FROM postgres:latest
+
+# Define variáveis de ambiente necessárias para o banco
+	ENV POSTGRES_NAME=gestao
+	ENV POSTGRES_USER=user_admin
+	ENV POSTGRES_PASSWORD=admin_123
+
+# Expor a porta padrão do PostgreSQL
+	EXPOSE 5432
+
+# (Opcional) Copia scripts .sql para executar na criação do banco
+COPY ./initdb.sql /docker-entrypoint-initdb.d/

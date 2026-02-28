@@ -59,6 +59,14 @@ WEBSERVICE-NODE-PESSOA/
 
 ## 🔧 Instalação e Execução
 
-1. **Clone o repositório:**
+1. **Instalação de desenvolvimento:**
+```bash
+	npm install express dotenv pg typeorm reflect-metadata joi cors swagger-ui-express
+	npm install -D typescript ts-node-dev copyfiles yamljs @types/express @types/node @types/swagger-ui-express @types/cors
+```
+
+2. **Clone o repositório:**
+```bash
    git clone [https://github.com/SEU_USUARIO/WEBSERVICE-NODE-PESSOA.git](https://github.com//WEBSERVICE-NODE-PESSOA-ENDERECO.git)
+```
 

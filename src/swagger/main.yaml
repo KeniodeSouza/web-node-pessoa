@@ -117,8 +117,8 @@ paths:
             schema:
               $ref: '#/components/schemas/EnderecoAtual'
       responses:
-        "201":
-          $ref: '#/components/responses/Atualizado'
+        "200":
+          $ref: '#/components/responses/Sucesso'
         "400":
           $ref: '#/components/responses/Erro'
 
@@ -337,8 +337,6 @@ components:
       description: Operação realizada com sucesso
     Criado:
       description: Recurso criado com sucesso
-    Atualizado:
-      description: Recurso atualizado com sucesso
     Erro:
       description: Ocorreu um erro inesperado
       content:
